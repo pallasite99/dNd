@@ -25,11 +25,14 @@ DROP TABLE IF EXISTS `classes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `classes` (
-  `id` int NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `url` varchar(70) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `hit_die` int NOT NULL,
+  `spellcasting` enum('None','Partial','Full') NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +41,67 @@ CREATE TABLE `classes` (
 
 LOCK TABLES `classes` WRITE;
 /*!40000 ALTER TABLE `classes` DISABLE KEYS */;
+INSERT INTO `classes` VALUES (1,'Barbarian',12,'None','2023-06-13 17:37:22','2023-06-13 17:37:22'),(2,'Wizard',6,'Full','2023-06-13 17:37:22','2023-06-13 17:37:22'),(3,'Rogue',8,'None','2023-06-13 17:37:22','2023-06-13 17:37:22'),(4,'Cleric',8,'Full','2023-06-13 17:37:22','2023-06-13 17:37:22');
 /*!40000 ALTER TABLE `classes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `gender`
+--
+
+DROP TABLE IF EXISTS `gender`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `gender` (
+  `id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `gender`
+--
+
+LOCK TABLES `gender` WRITE;
+/*!40000 ALTER TABLE `gender` DISABLE KEYS */;
+INSERT INTO `gender` VALUES (1,'Male','Identifies as male.','2023-06-13 16:15:07','2023-06-13 16:15:07'),(2,'Female','Identifies as female.','2023-06-13 16:15:07','2023-06-13 16:15:07'),(3,'Non-binary','Identifies outside the traditional binary genders.','2023-06-13 16:15:07','2023-06-13 16:15:07'),(4,'Other','Identifies with a gender not listed above.','2023-06-13 16:15:07','2023-06-13 16:15:07');
+/*!40000 ALTER TABLE `gender` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `races`
+--
+
+DROP TABLE IF EXISTS `races`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `races` (
+  `id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `size` enum('Small','Medium','Large') NOT NULL,
+  `speed` int NOT NULL,
+  `ability_bonuses` json DEFAULT NULL,
+  `alignment` varchar(20) DEFAULT NULL,
+  `languages` json DEFAULT NULL,
+  `traits` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `races`
+--
+
+LOCK TABLES `races` WRITE;
+/*!40000 ALTER TABLE `races` DISABLE KEYS */;
+INSERT INTO `races` VALUES (1,'Human','Medium',30,'{\"wisdom\": 1, \"charisma\": 1, \"strength\": 1, \"dexterity\": 1, \"constitution\": 1, \"intelligence\": 1}','Neutral','[\"Common\"]','{\"Trait 1\": \"Description 1\", \"Trait 2\": \"Description 2\"}','2023-06-12 15:05:32','2023-06-12 15:05:32'),(2,'Elf','Medium',30,'{\"dexterity\": 2}','Chaotic Good','[\"Common\", \"Elvish\"]','{\"Trait 1\": \"Description 1\", \"Trait 2\": \"Description 2\"}','2023-06-12 15:05:32','2023-06-12 15:05:32'),(3,'Dwarf','Medium',25,'{\"constitution\": 2}','Lawful Good','[\"Common\", \"Dwarvish\"]','{\"Trait 1\": \"Description 1\", \"Trait 2\": \"Description 2\"}','2023-06-12 15:05:32','2023-06-12 15:05:32');
+/*!40000 ALTER TABLE `races` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -229,4 +292,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-05 22:37:01
+-- Dump completed on 2023-06-13 23:13:57
