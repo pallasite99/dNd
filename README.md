@@ -9,6 +9,13 @@
 
 ![image](https://github.com/pallasite99/dNd/assets/26508636/ae14a493-d8f9-43a7-99a3-44ca40b68d90)
 
+### GraphQL
+
+* Endpoint: `localhost:3000/graphql`
+* Example:
+
+![image](https://github.com/pallasite99/dNd/assets/26508636/738c6ec1-cca5-46ed-8357-cf0a5e041964)
+
 ### API example (returning list of races)
 
 ![image](https://github.com/pallasite99/dNd/assets/26508636/aaba5789-4c40-4707-ad19-6658e431ff3f)
