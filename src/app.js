@@ -1,6 +1,7 @@
 const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema } = require('graphql');
 const mysql = require('mysql2/promise');
-const routes = require('./routes/index');
 
 // Create MySQL connection pool
 const pool = mysql.createPool({
@@ -11,60 +12,77 @@ const pool = mysql.createPool({
     connectionLimit: 10, // Adjust the limit as per requirements
 });
 
+// Define the GraphQL schema
+const schema = buildSchema(`
+  type Race {
+    id: Int
+    name: String
+    size: String
+    speed: Int
+    ability_bonuses: String
+    alignment: String
+    languages: String
+    traits: String
+  }
+
+  type Gender {
+    name: String
+    description: String
+  }
+
+  type Class {
+    name: String
+    hit_die: Int
+    spellcasting: String
+  }
+
+  type Query {
+    races: [Race]
+    gender: [Gender]
+    classes: [Class]
+  }
+`);
+
 // Utility function to execute a MySQL query
 const executeQuery = async (query) => {
     try {
-      const connection = await pool.getConnection();
-      const [results] = await connection.query(query);
-      connection.release();
-      return results;
+        const connection = await pool.getConnection();
+        const [results] = await connection.query(query);
+        connection.release();
+        return results;
     } catch (error) {
-      throw new Error('Error executing MySQL query');
+        throw new Error('Error executing MySQL query');
     }
-  };
+};
+
+// Define the root resolver
+const root = {
+    races: async () => {
+        const query = 'SELECT * FROM races';
+        const results = await executeQuery(query);
+        return results;
+    },
+    gender: async () => {
+        const query = 'SELECT name, description FROM gender';
+        const results = await executeQuery(query);
+        return results;
+    },
+    classes: async () => {
+        const query = 'SELECT name, hit_die, spellcasting FROM classes';
+        const results = await executeQuery(query);
+        return results;
+    },
+};
 
 // Create express app
 const app = express();
 
-// Middleware to handle errors
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).json({ error: 'Internal server error' });
-});
-
-// Races endpoint
-app.get('/races', async (req, res) => {
-    try {
-        const query = 'SELECT * FROM races';
-        const results = await executeQuery(query);
-        res.json(results);
-    } catch (error) {
-        console.log(error);
-        res.status(400).send({error: 'Bad Request'});
-    }
-});
-
-// List gender endpoint
-app.get('/gender', async (req, res) => {
-    try {
-        const query = 'SELECT name, description FROM gender';
-        const results = await executeQuery(query);
-        res.json(results);        
-    } catch (error) {
-        res.status(400).send({error: 'Bad Request'});
-    }
-});
-
-// List classes endpoint
-app.get('/classes', async (req, res) => {
-    try {
-        const query = 'SELECT name, hit_die, spellcasting FROM classes';
-        const results = await executeQuery(query);
-        res.json(results);
-    } catch (error) {
-        res.status(400).send({error: 'Bad Request'});
-    }
-})
+// GraphQL endpoint
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+}));
 
 // Start the server
 app.listen(3000, () => {
