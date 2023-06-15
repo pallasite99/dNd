@@ -2,6 +2,7 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mysql = require('mysql2/promise');
+const cors = require('cors');
 
 // Create MySQL connection pool
 const pool = mysql.createPool({
@@ -11,6 +12,9 @@ const pool = mysql.createPool({
     database: 'dnd',
     connectionLimit: 10, // Adjust the limit as per requirements
 });
+
+// Enable CORS
+app.use(cors());
 
 // Define the GraphQL schema
 const schema = buildSchema(`
