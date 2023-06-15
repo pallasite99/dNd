@@ -13,9 +13,6 @@ const pool = mysql.createPool({
     connectionLimit: 10, // Adjust the limit as per requirements
 });
 
-// Enable CORS
-app.use(cors());
-
 // Define the GraphQL schema
 const schema = buildSchema(`
   type Race {
@@ -80,6 +77,9 @@ const root = {
 
 // Create express app
 const app = express();
+
+// Enable CORS
+app.use(cors());
 
 // GraphQL endpoint
 app.use('/graphql', graphqlHTTP({
