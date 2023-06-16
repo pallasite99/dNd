@@ -1,7 +1,7 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql');
 const mysql = require('mysql2/promise');
+const { schema } = require('./db/graphql');
 const cors = require('cors');
 
 // Create MySQL connection pool
@@ -12,37 +12,6 @@ const pool = mysql.createPool({
     database: 'dnd',
     connectionLimit: 10, // Adjust the limit as per requirements
 });
-
-// Define the GraphQL schema
-const schema = buildSchema(`
-  type Race {
-    id: Int
-    name: String
-    size: String
-    speed: Int
-    ability_bonuses: String
-    alignment: String
-    languages: String
-    traits: String
-  }
-
-  type Gender {
-    name: String
-    description: String
-  }
-
-  type Class {
-    name: String
-    hit_die: Int
-    spellcasting: String
-  }
-
-  type Query {
-    races: [Race]
-    gender: [Gender]
-    classes: [Class]
-  }
-`);
 
 // Utility function to execute a MySQL query
 const executeQuery = async (query) => {
