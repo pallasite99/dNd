@@ -6,10 +6,10 @@ const cors = require('cors');
 
 // Create MySQL connection pool
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'dnd',
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     connectionLimit: 10, // Adjust the limit as per requirements
 });
 
